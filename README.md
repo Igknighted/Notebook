@@ -1,50 +1,51 @@
 The git Basics
 ==============
 
+
 This will setup our ~/.gitconfig  so that people will know it's me committing files.
-# git config --global user.name "Igknighted"
-# git config --global user.email sam.igknighted@gmail.com
+git config --global user.name "Igknighted" <
+git config --global user.email sam.igknighted@gmail.com <
 
 Repository setup process
-# vim .gitignore
-# git init
-# git add .
-# git commit -m 'Comment here'
-# git remote add origin git@github.com:Igknighted/expglyph.com.git
-# git push origin master --force
+vim .gitignore
+git init
+git add .
+git commit -m 'Comment here'
+git remote add origin git@github.com:Igknighted/expglyph.com.git
+git push origin master --force
 
 Pushing changes
-# git add .
-# git ls-files --deleted | xargs git rm
-# git commit -m 'Comment here'
-# git push origin master
+git add .
+git ls-files --deleted | xargs git rm
+git commit -m 'Comment here'
+git push origin master
 
 Force the changes if it told me 'no'
-# git push origin master --force
+git push origin master --force
 
 Pull from the repository
-# git pull origin master
+git pull origin master
 
 Forcefully pull and replace files if it told me 'no'
-# git reset --hard origin/master
+git reset --hard origin/master
 
 Remove something from the history
-# git rm "FILENAME" --cache
-# git commit -m "Wiping history for FILENAME"
-# git filter-branch --force --index-filter "git rm -r -f --ignore-unmatch FILENAME" --prune-empty --tag-name-filter cat -- --all
+git rm "FILENAME" --cache
+git commit -m "Wiping history for FILENAME"
+git filter-branch --force --index-filter "git rm -r -f --ignore-unmatch FILENAME" --prune-empty --tag-name-filter cat -- --all
 
 Check to see if there are updates?
-# git fetch --all
+git fetch --all
 
 Full revision list (not sure if it's useful yet)
-# git rev-list --objects --all
+git rev-list --objects --all
 
 Restore a file from one of the prior commited verions.
-# git log --oneline FILENAME
-# git checkout 16be209 FILENAME
+git log --oneline FILENAME
+git checkout 16be209 FILENAME
 
 If I started working on a new system and forgot to set the git config, this example will replace committer 'glyph' with 'Igknighted'.
-# git filter-branch -f --commit-filter '
+git filter-branch -f --commit-filter '
         if [ "$GIT_COMMITTER_NAME" = "glyph" ];
         then
                 GIT_COMMITTER_NAME="Igknighted";
