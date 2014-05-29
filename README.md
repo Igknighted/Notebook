@@ -6,13 +6,13 @@ This will setup our ~/.gitconfig  so that people will know it's me committing fi
 git config --global user.name "Igknighted" <
 git config --global user.email sam.igknighted@gmail.com <
 
-Repository setup process
-> vim .gitignore
-> git init
-> git add .
-> git commit -m 'Comment here'
-> git remote add origin git@github.com:Igknighted/expglyph.com.git
-> git push origin master --force
+###### Repository setup process
+vim .gitignore
+git init
+git add .
+git commit -m 'Comment here'
+git remote add origin git@github.com:Igknighted/expglyph.com.git
+git push origin master --force
 
 Pushing changes
 git add .
