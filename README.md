@@ -6,7 +6,7 @@ This will setup our ~/.gitconfig  so that people will know it's me committing fi
 git config --global user.name "Igknighted" <
 git config --global user.email sam.igknighted@gmail.com <
 
-###### Repository setup process
+###### Repository setup process::
 vim .gitignore
 git init
 git add .
