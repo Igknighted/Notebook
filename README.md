@@ -3,8 +3,10 @@ The git Basics
 
 
 This will setup our ~/.gitconfig  so that people will know it's me committing files.
-git config --global user.name "Igknighted" <
-git config --global user.email sam.igknighted@gmail.com <
+```
+# git config --global user.name "Igknighted" <
+# git config --global user.email sam.igknighted@gmail.com <
+```
 
 ###### Repository setup process::
 ```
