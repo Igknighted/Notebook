@@ -78,3 +78,20 @@ If I started working on a new system and forgot to set the git config, this exam
                 git commit-tree "$@";
         fi' -f HEAD
 ```
+
+I like to ensure that my daily coding streak is properly documented in github, so if the server I'm committing from fucks me, this line will ammend the commit date:
+```
+# git commit --amend --date="Wed Feb 16 14:00 2011 +0100"
+```
+
+If I have to revise what I already pushed,
+```
+# git log | head -n12
+# git filter-branch --env-filter \
+    'if [ $GIT_COMMIT = 119f9ecf58069b265ab22f1f97d2b648faf932e0 ]
+     then
+         export GIT_AUTHOR_DATE="Fri Jan 2 21:38:53 2009 -0800"
+         export GIT_COMMITTER_DATE="Sat May 19 01:01:01 2007 -0700"
+     fi'
+# git push origin master --force
+```
