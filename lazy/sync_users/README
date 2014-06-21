@@ -1,0 +1,25 @@
+What does this do?
+==================
+This setup will sync all usernames and user IDs from one server to another. It's good for environments where usernames and ID's have to made due to a shared file system.
+
+Steps for setup:
+
+Create SSH key pair with no passphrase:
+# ssh-keygen -t rsa
+
+Take the .pub file you create, cat it:
+# cat ~/.ssh/id_rsa.pub
+
+Append the contents of that file to ~/.ssh/authorized_keys on the remote server:
+root@REMOTE_SERVER # vim ~/.ssh/authorized_keys
+
+Now on the 'user' server, we need to setup the userxchange script to run. Do the following:
+
+# cd /opt
+# wget https://raw.githubusercontent.com/Igknighted/Notebook/master/lazy/sync_users/userxchange.sh
+# crontab -e
+
+Add this line to the crontab and save: (replace __IP__ADDRESS__HERE__ obviously)
+*/5 * * * * /opt/userxchange.sh __IP__ADDRESS__HERE__ 2>&1 > /dev/null
+
+Done...
