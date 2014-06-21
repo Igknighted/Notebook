@@ -32,6 +32,11 @@ Retype new UNIX password:
 passwd: password updated successfully
 ```
 
+Had to fix the locale settings for some reason:
+```
+locale-gen en_US.UTF-8
+```
+
 We need to allow root logins over SSH, so we're editing the SSHD config:
 ```
 root@8bfdb0248c89:/# vim /etc/ssh/sshd_config 
