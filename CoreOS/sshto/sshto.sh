@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Does not work due to TTY allocation problem :(
+#
+
 if [ ! -f ~/.sshto/key ]; then
 	mkdir ~/.sshto
 	ssh-keygen -t rsa -N "" -f ~/.sshto/key
