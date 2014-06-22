@@ -113,7 +113,7 @@ logout
 
 I'm going to now name my container ubuntu14 and start it for the first time:
 ```
-# docker run --name ubuntu14 -d -p 2122:22 -v /home:/home -v /var/www:/var/www ubuntu:14.04LTS /opt/docker.init
+# docker run --name ubuntu14 -dit -p 2122:22 -v /home:/home -v /var/www:/var/www ubuntu:14.04LTS /opt/docker.init
 696520d743549609486a24a1dc444c204bacd6c4628352b2d7f750efcb08436a
 ```
 
