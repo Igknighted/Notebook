@@ -113,7 +113,7 @@ logout
 
 I'm going to now name my container web1 and start it for the first time:
 ```
-# docker run --name web1 -d -p 2122:22 -v /home:/home -v /var/www:/var/www centos:cent01 /opt/docker.init
+# docker run --name web1 -dit -p 2122:22 -v /home:/home -v /var/www:/var/www centos:cent01 /opt/docker.init
 696520d743549609486a24a1dc444c204bacd6c4628352b2d7f750efcb08436a
 ```
 
