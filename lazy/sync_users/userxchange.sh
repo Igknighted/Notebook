@@ -22,8 +22,8 @@ then
 	awk -F: '{if($3>=500) print $0}' < /etc/passwd >> newpasswd
 	awk -F: '{if($3>=500) print $0}' < /etc/group >> newgroup
 
-	scp -o StrictHostKeyChecking=no newpasswd root@172.17.0.2:/etc/passwd
-	scp -o StrictHostKeyChecking=no newgroup root@172.17.0.2:/etc/group
+	scp -o StrictHostKeyChecking=no newpasswd root@$1:/etc/passwd
+	scp -o StrictHostKeyChecking=no newgroup root@$1:/etc/group
 
 	cd ~
 
