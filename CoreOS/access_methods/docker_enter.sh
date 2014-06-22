@@ -34,9 +34,9 @@ if [ -d "$imgpath" ]; then
 
 	echo Attempting to place you into the $1 container...
 
-	SSHCMD=$(docker inspect "$1" | grep IPAddress | awk -F'"' '{print "ssh -i ~/.sshto/key -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@"$4}')
+	SSHCMD=$(docker inspect "$1" | grep IPAddress | awk -F'"' '{print "ssh -i ~/.sshto/key -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@"$4" -q"}')
 	echo $SSHCMD
-	$SSHCMD
+	eval $SSHCMD
 else
 	echo Image $1 not found.
 fi
