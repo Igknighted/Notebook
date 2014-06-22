@@ -6,6 +6,11 @@ if [ "$1" == "" ]; then
 fi
 
 MODIFICATION_DIFF=$(expr `date +%s` - `date -r /etc/passwd +%s`)
+
+if [ "$2" == "-f" ] || [ "$2" == "--force" ]; then
+	MODIFICATION_DIFF="0"
+fi
+
 if [[ $MODIFICATION_DIFF -lt 300 ]]
 then
 
