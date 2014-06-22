@@ -1,7 +1,12 @@
 #!/bin/bash
 
-# Does not work due to TTY allocation problem :(
-#
+if [ "$1" == "" ]; then
+	echo Usage: $0 CONTAINER_ID_OR_NAME
+	echo
+	echo Used to access docker containers that have the ssh service running.
+	echo SSH key will be injected into container to make this work.
+	exit
+fi
 
 if [ ! -f ~/.sshto/key ]; then
 	mkdir ~/.sshto
@@ -21,12 +26,17 @@ if [ -d "$imgpath" ]; then
 
 	cat ~/.sshto/key.pub >> $SSHKEYDIR/authorized_keys
 
-	cat $SSHKEYDIR/authorized_keys | sort | uniq > $SSHKEYDIR/authorized_keys_tmp
-	cat $SSHKEYDIR/authorized_keys_tmp > $SSHKEYDIR/authorized_keys
-	rm -rf $SSHKEYDIR/authorized_keys_tmp
+	cat "$SSHKEYDIR/authorized_keys" | sort | uniq > "$SSHKEYDIR/authorized_keys_tmp"
+	cat "$SSHKEYDIR/authorized_keys_tmp" > "$SSHKEYDIR/authorized_keys"
+	chmod 700 "$SSHKEYDIR"
+	chmod 600 "$SSHKEYDIR/authorized_keys"
+	rm -rf "$SSHKEYDIR/authorized_keys_tmp"
 
 	echo Attempting to place you into the $1 container...
 
-	docker inspect "$1" | grep IPAddress | awk -F'"' '{print "ssh -i ~/.sshto/key -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@"$4}' | bash
-
+	SSHCMD=$(docker inspect "$1" | grep IPAddress | awk -F'"' '{print "ssh -i ~/.sshto/key -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@"$4}')
+	echo $SSHCMD
+	$SSHCMD
+else
+	echo Image $1 not found.
 fi
