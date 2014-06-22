@@ -170,7 +170,7 @@ Now to add the systemctl configuration for the web1 service:
 ln -s '/etc/systemd/system/web1.service' '/etc/systemd/system/multi-user.target.wants/web1.service'
 ```
 
-Stop the container, in CoreOS, we will use systemctl to do this moving forward:
+Stop the container, we will use systemd to do this moving forward:
 ```
 # docker stop web1
 web1
