@@ -156,7 +156,6 @@ Requires=docker.service
 [Service]
 ExecStart=/bin/bash -c '/usr/bin/docker start -a ubuntu14'
 ExecStop=/usr/bin/docker stop ubuntu14
-ExecStopPost=/usr/bin/docker commit ubuntu14 ubuntu:14.04LTS
 
 
 [Install]
