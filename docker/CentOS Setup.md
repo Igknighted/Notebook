@@ -156,7 +156,6 @@ Requires=docker.service
 [Service]
 ExecStart=/bin/bash -c '/usr/bin/docker start -a web1'
 ExecStop=/usr/bin/docker stop web1
-ExecStopPost=/usr/bin/docker commit web1 centos:cent01
 
 
 [Install]
