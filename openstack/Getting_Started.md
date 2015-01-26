@@ -12,8 +12,6 @@ root@localhost # pvcreate /dev/sda4
 root@localhost # vgcreate cinder-block /dev/sda4
 root@localhost # vim /etc/cinder/cinder.conf
 root@localhost # systemctl restart openstack-cinder-volume
-root@localhost # vgremove cinder-volumes
-root@localhost # pvremove /dev/loop2
 ```
 I set the volume_group setting to the new volume group "cinder-block".
 
