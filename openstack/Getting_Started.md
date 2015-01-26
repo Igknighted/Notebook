@@ -16,3 +16,16 @@ root@localhost # vgremove cinder-volumes
 root@localhost # pvremove /dev/loop2
 ```
 I set the volume_group setting to the new volume group "cinder-block".
+
+Another problem was witht he br-ex interface it created by default with the demo. Had to edit the file /etc/sysconfig/network-scripts/ifcfg-br-ex to read as follows:
+```
+DEVICE=br-ex
+DEVICETYPE=ovs
+TYPE=OVSBridge
+BOOTPROTO=static
+#IPADDR=172.24.4.225_br_ex
+#NETMASK=255.255.255.240_br_ex
+IPADDR=172.24.4.225
+NETMASK=255.255.255.240
+ONBOOT=yes
+```
