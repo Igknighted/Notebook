@@ -29,3 +29,9 @@ IPADDR=172.24.4.225
 NETMASK=255.255.255.240
 ONBOOT=yes
 ```
+
+
+Upon completing the automated setup, always make sure what you wanted is running:
+```
+systemctl --all | grep openstack | less
+```
