@@ -112,7 +112,7 @@ ONBOOT=yes
 IPADDR=192.168.0.24
 ```
 
-After you guarantee networking is pimpin', move along and disable VNC viewer:
+After you guarantee networking is pimpin', move along and disable VNC viewer remotely, unless you want that type of thing:
 ```
 # vim /etc/xen/vms/thor.cfg
 # cat /etc/xen/vms/thor.cfg
@@ -122,7 +122,8 @@ memory = '1024'
 vcpus = 1
 vif = ['bridge=xenbr0']
 disk = ['phy:/dev/mini-vg/thor,hda,w']
-vnc = 0
+vnc = 1
+IPADDR=127.0.0.1
 boot = 'c'
 # xl config-update thor /etc/xen/vms/thor.cfg
 # xl reboot thor
