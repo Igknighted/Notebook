@@ -11,24 +11,15 @@ Setup the bridged network adapter with a static IP and make sure you don't use s
 # /etc/init.d/network-manager stop
 # vim /etc/network/interfaces
 # cat /etc/network/interfaces
-# This file describes the network interfaces available on your system
-# and how to activate them. For more information, see interfaces(5).
-
-# The loopback network interface
 auto lo
 iface lo inet loopback
 
-# The xen network interface for "dom0
 auto xenbr0
 iface xenbr0 inet static
 
-# IP addr
 address 192.168.0.16
-# Subnet mask
 netmask 255.255.255.0
-#Default gateway
 gateway 192.168.0.1
-# DNS Server
 dns-nameservers 8.8.8.8 8.8.4.4
 
 bridge_ports eth0
