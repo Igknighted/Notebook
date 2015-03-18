@@ -12,7 +12,7 @@ Repository setup process::
 ```
 # vim .gitignore
 # git init
-# git add .
+# git add -A
 # git commit -m 'Comment here'
 # git remote add origin git@github.com:Igknighted/expglyph.com.git
 # git push origin master --force
@@ -20,7 +20,7 @@ Repository setup process::
 
 Pushing changes
 ```
-# git add .
+# git add -A
 # git ls-files --deleted | xargs git rm
 # git commit -m 'Comment here'
 # git push origin master
