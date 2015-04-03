@@ -1,9 +1,12 @@
 #!/bin/perl
-# This is a really lazy automation example in perl.
-# It will wget the latest wordpress files and throw them into a the directory specified. 
-
-# Needs perl-Expect installed. For RHEL 7: yum install perl-Expect
 use Expect;
+
+
+sub run {
+	$cmd = $_[0];
+	$exp->expect(undef, [$prompt => sub { $exp->send("$cmd\n"); } ]);
+}
+
 
 # Make sure user supplied all 4 arguments 
 if ($#ARGV != 3) {
@@ -16,50 +19,31 @@ $user = $ARGV[0];
 $host = $ARGV[1];
 $pw   = $ARGV[2];
 $dir  = $ARGV[3];
-
-
+# Setup our config variables
+$prompt = "_# ";
 $exp = new Expect();
+
+# Some debugging stuff
 #$exp->raw_pty(1);  
 #$exp->log_stdout(0);
+
+# Execute our SSH command.
 $exp->spawn("ssh -l $user $host -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no");
- 
-$exp->expect(20, ['[Pp]assword:']);
-$exp->send("$pw\n");
 
-# Set a custom prompt so things don't get murky.
-$exp->expect(10, ['[\#\$]']);
-$exp->send("PS1='_# '\n");
+# Login to the server
+$exp->expect(undef, ["[Pp]assword:" => sub { $exp->send("$pw\n"); } ]);
+# Set the prompt to something we can trust
+$exp->expect(undef, ["[#\$]" => sub { $exp->send("PS1='$prompt'\n"); } ]);
 
 
-# If the specified directory doesn't exist, we will make it exist.
-$exp->expect(10, ['_[\#]']);
-$exp->send("mkdir -p ~/$dir\n");
-
-# Go to the directory
-$exp->expect(10, ['_[\#]']);
-$exp->send("cd ~/$dir\n");
+run("mkdir -p ~/$dir");
+run("cd ~/$dir");
+run("touch testing12345");
+run("exit");
 
 
-# Get latest.tar.gz from wordpress.org
-$exp->expect(10, ['_[\#]']);
-$exp->send("wget https://wordpress.org/latest.tar.gz\n");
+# If we want to provide an interactive shell, we can...
+#$exp->interact();
 
-# Extract the wordpress files
-$exp->expect(10, ['_[\#]']);
-$exp->send("tar -xzf latest.tar.gz\n");
-
-# Move the wordpress files directly into this dir.
-$exp->expect(10, ['_[\#]']);
-$exp->send("cp -rf wordpress/* .\n");
-
-# Remove the empty wordpress directory and latest.tar.gz.
-$exp->expect(10, ['_[\#]']);
-$exp->send("rm -rf wordpress latest.tar.gz\n");
-
-# Logout. 
-$exp->expect(10, ['_[\#]']);
-$exp->send("logout\n");
-
-# Close the connection
-$exp->expect(10, ['_[\#]']);
-$exp->close();   
+# Doing a soft_close makes expect wait patiently for the EOF
+$exp->soft_close();   
