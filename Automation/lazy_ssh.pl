@@ -2,6 +2,7 @@
 # This is a really lazy automation example in perl.
 # It will wget the latest wordpress files and throw them into a the directory specified. 
 
+# Needs perl-Expect installed. For RHEL 7: yum install perl-Expect
 use Expect;
 
 # Make sure user supplied all 4 arguments 
