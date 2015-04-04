@@ -1,0 +1,95 @@
+The end goal is to run linux in a VM and use the applications as if they were
+integrated into your windows OS.
+
+The cons
+--------
+- File systems are separate (you can work around by connecting to FTP on the VM)
+- Cisco AnyConnect Secure Mobility Client hates you and you can't rig your routes
+
+The pros
+--------
+-You get the power of linux inside the comfort of your windows OS.
+
+Things to install
+-----------------
+VirtualBox - https://www.virtualbox.org/wiki/Downloads
+This will house our Linux install. I also installed the Oracle VM Extension Pack
+for the USB support.
+
+PuTTY - http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html
+Downloaded the windows installer.
+
+Xming  - http://sourceforge.net/projects/xming/
+This is our X windowing system to run the windows that would normally be in our 
+Linux guest, directly in windows. Also during install, told it where PuTTY is.
+
+Fedora - http://fedoraproject.org/
+You should be able use whatever distro of Linux that you want though. As long as it 
+supports X11
+
+
+Setup
+-----
+Make sure VM has following settings taken care of.
+General > Advanced > Shared Clipboard > Bidirectional
+General > Advanced > Drag'n'Drop > Bidirectional
+General > Advanced > Mini ToolBar: Show in Fullscreen/Seamless > Unchecked
+Network > Adapter 1 > Attached to: (Bridged Adapter OR NAT)
+Network > Adapter 1 > Ok
+Network > Adapter 2 > Enable Network Adapter > Checked
+Network > Adapter 2 > Attached to: Host-only Adapter
+Network > Adapter 2 > Ok
+
+
+Login to your VM and make sure that it is accessible over your host-only network
+adapter and SSH runs on boot... Just important stuff... ya know?
+
+# su -
+# chkconfig sshd on
+# service sshd restart
+# iptables -F
+# service iptables save
+
+Find the Host-Only network IP for your VM:
+# ifconfig
+
+Edit this file, placing the ip address into a new line:
+C:\Program Files (x86)\Xming\X0.hosts
+
+If you already have xming running, restart it.
+
+On the VM, we need some SSH keys made for easy access:
+# ssh-keygen -t rsa
+# cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+
+Save this output as a plain text files in Windows OS.
+# cat ~/.ssh/id_rsa
+
+Create a PPK file with PuTTYgen. In PuTTYgen, use the "Conversions" drop down
+and select "Import Key". From that, I selected my SSH key, clicked "Save public key",
+named it FedoraVM.ppk and was done.
+
+Now we need to edit the launcher batch script:
+https://raw.githubusercontent.com/Igknighted/Notebook/master/VirtualBox/Nautilus_Launcher_(Example).bat
+
+Replace 192.168.56.1 with whatever the gateway is for the Host-Only adapter from
+your VM. It can be found with this command:
+# netstat -nr
+
+Change the username demon to your VM's username.
+
+Change C:\Users\Samuel\Documents\SSHKeys\FedoraVM.ppk to the full patch on windows
+where you saved the new key PPK file.
+
+Change 192.168.56.101 to the same IP your VM is using from the host only adapter that
+you found with this command:
+# ifconfig
+
+Note: May need to update these file paths based on install paths you chose:
+C:\Program Files (x86)\PuTTY\plink.exe
+C:\Program Files (x86)\Xming\Xming.ex
+
+=================
+Happy WinLinuxing
+=================
+Credit: Sam Peterson <igknighted@gmail.com>
