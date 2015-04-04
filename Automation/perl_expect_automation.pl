@@ -1,4 +1,7 @@
 #!/bin/perl
+# This is an example perl script that uses expect to automate tasks over SSH.
+
+
 use Expect;
 
 
