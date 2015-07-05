@@ -46,13 +46,13 @@ if [ "$1" == "install" ]; then
   cd /etc/yum.repos.d && wget http://download.gluster.org/pub/gluster/glusterfs/LATEST/RHEL/glusterfs-epel.repo
   yum install -y parted lvm2 xfsprogs glusterfs{,-server,-fuse,-geo-replication}
   
-  # BEGIN: Enable and start the glusterd service
-  if [ "$DISTRO" == "rhel" && "$VERSION_ID" == "7" ]; then
-    systemctl enable glusterd
-    systemctl restart glusterd
-	elif [ "$DISTRO" == "rhel" && "$VERSION_ID" == "6" ]; then
-	  service glusterd restart
-	  chkconfig glusterd on
+	# BEGIN: Enable and start the glusterd service
+	if [ "$DISTRO" == "rhel" ] && [ "$VERSION_ID" == "7" ]; then
+		systemctl enable glusterd
+		systemctl restart glusterd
+	elif [ "$DISTRO" == "rhel" ] && [ "$VERSION_ID" == "6" ]; then
+		service glusterd restart
+		chkconfig glusterd on
 	fi
   # END: Enable and start the glusterd service
 
