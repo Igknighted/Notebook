@@ -40,16 +40,16 @@ if [ "$1" == "install" ]; then
   mkdir /var/lib/gvol_$DATESTAMP/brick
 fi
 
-if [ "$1" == "first" ]; then
-  export PRIMARY_NODE_IP=$2
-  export CURRENT_NODE_IP=$3
+if [ "$1" == "connect" ]; then
+  export NODE1_IP=$2
+  export NODE2_IP=$3
   export BLOCK_STORAGE=$4
   
-  gluster peer probe $PRIMARY_NODE_IP
-  gluster peer probe $CURRENT_NODE_IP
+  gluster peer probe $NODE1_IP
+  gluster peer probe $NODE2_IP
   
   
-  gluster volume create gvol_$DATESTAMP replica 1 transport tcp $CURRENT_NODE_IP:/var/lib/gvol_$DATESTAMP/brick
+  gluster volume create gvol_$DATESTAMP replica 2 transport tcp $NODE1_IP:/var/lib/gvol_$DATESTAMP/brick $NODE2_IP:/var/lib/gvol_$DATESTAMP/brick
   gluster volume set gvol_$DATESTAMP auth.allow 192.168.*.*
   gluster volume set gvol_$DATESTAMP nfs.disable off
   gluster volume set gvol_$DATESTAMP nfs.addr-namelookup off
