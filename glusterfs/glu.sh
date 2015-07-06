@@ -173,3 +173,15 @@ if [ "$1" == "mount" ]; then
 		echo 'Hello World' > /mnt/gluster/gvol_$DATESTAMP/testfile_$DATESTAMP
 	fi
 fi
+
+
+
+if [ "$1" == "add" ]; then
+	NODE1_IP=$2
+	
+	gluster peer probe $NODE1_IP
+	VOLUME_NAME=$(gluster volume info | grep '^Volume Name:' | awk '{print $3}')
+	NODE_NUM=$(gluster pool list | wc -l)
+	
+	gluster volume add-brick $VOLUME_NAME replica $NODE_NUM $NODE1_IP:/var/lib/gvol_$DATESTAMP/brick
+fi
