@@ -11,7 +11,7 @@ fi
 
 if [ -f /etc/redhat-release ]; then
 	DISTRO="rhel"
-	echo Detected RHEL based distro.
+	#echo Detected RHEL based distro.
 elif [ "$NAME" == "Ubuntu" ]; then
 	DISTRO="ubuntu"
 	echo Detected Ubuntu based distro.
@@ -40,17 +40,22 @@ if [ "$1" == "" ]; then
 	echo '     This will walk you through the install process step by step.'
 	echo
 	echo
-	echo 'These are the manual steps'
+	echo 'These are the manual steps for setting up first two nodes'
 	echo '     ./glu.sh install /dev/xvd[b-z]'
-	echo '          This needs to be ran on all the servers to setup gluster services and bricks.'
+	echo '          This needs to be ran on both the servers to setup gluster services and bricks.'
 	echo '     ./glu.sh connect [Private IP of Node 1] [Private IP of Node 2]'
-	echo '          This only needs to be ran on one of the servers to setup the gluster volume.'
+	echo '          This only needs to be ran on only ONE of the servers to setup the gluster volume.'
 	echo '     ./glu.sh mount'
 	echo '          This must be ran on both servers after the connect command. This will mount the gluster volume.'
 	echo
 	echo
-	echo './glu.sh add [Private IP of another Node]'
-	echo '     Run this from a new node after running "./glu.sh install" to add the new node. Then run "./glu.sh mount" to mount the gluster file system'
+	echo 'These are the steps for adding new nodes after the first two are setup.'
+	echo '     ./glu.sh install /dev/xvd[b-z]'
+	echo '          This needs to be ran on all the servers to setup gluster services and bricks.'
+	echo '     ./glu.sh add [Private IP of another Node]'
+	echo '          Run this from an existing node after running "./glu.sh install" to add the new node.'
+	echo '     ./glu.sh mount'
+	echo '          This must be ran on the new servers after the add command. This will mount the gluster volume.'
 	
 	exit
 fi
@@ -67,7 +72,7 @@ if [ "$1" == "auto" ]; then
 	$0 mount
 	echo
 	echo
-	read -p 'Go run "./glu.sh mount" on the other server node now and you should be done.' NOVAR
+	echo 'Go run "./glu.sh mount" on the other server node now and you should be done.'
 fi
 
 
@@ -128,6 +133,11 @@ if [ "$1" == "install" ]; then
 	echo Showing df output below.
 	echo
 	df -h
+	
+	
+	echo
+	echo
+	echo 'Now go run "./glu.sh connect [NODE_1_IP]  [NODE_2_IP]" from only ONE NODE after install was done on both'
 fi
 
 
@@ -152,6 +162,10 @@ if [ "$1" == "connect" ]; then
 	gluster volume set gvol_$DATESTAMP nfs.export-volumes on
 	gluster volume set gvol_$DATESTAMP nfs.rpc-auth-allow 192.168.*.*
 	gluster volume start gvol_$DATESTAMP
+	
+	echo
+	echo
+	echo 'Now go run "./glu.sh mount" on '$NODE1_IP' and '$NODE2_IP
 fi
   
 
@@ -165,12 +179,12 @@ if [ "$1" == "mount" ]; then
 	echo
 	echo
 	echo Testing things out...
-	if [ -f /mnt/gluster/gvol_$DATESTAMP/testfile_$DATESTAMP ]; then
-		echo File /mnt/gluster/gvol_$DATESTAMP/testfile_$DATESTAMP exists, reading it:
-		cat /mnt/gluster/gvol_$DATESTAMP/testfile_$DATESTAMP
+	if [ -f /mnt/gluster/gvol_$DATESTAMP/rs_testfile ]; then
+		echo File /mnt/gluster/gvol_$DATESTAMP/rs_testfile exists, reading it:
+		cat /mnt/gluster/gvol_$DATESTAMP/rs_testfile
 	else
-		echo Creating test file /mnt/gluster/gvol_$DATESTAMP/testfile_$DATESTAMP so that during the mount on the other server, it will test reading it.
-		echo 'Hello World' > /mnt/gluster/gvol_$DATESTAMP/testfile_$DATESTAMP
+		echo Creating test file /mnt/gluster/gvol_$DATESTAMP/rs_testfile so that during the mount on the other server, it will test reading it.
+		echo 'Hello World' > /mnt/gluster/gvol_$DATESTAMP/rs_testfile
 	fi
 fi
 
@@ -180,8 +194,14 @@ if [ "$1" == "add" ]; then
 	NODE1_IP=$2
 	
 	gluster peer probe $NODE1_IP
-	VOLUME_NAME=$(gluster volume info | grep '^Volume Name:' | awk '{print $3}')
-	NODE_NUM=$(gluster pool list | wc -l)
-	
-	gluster volume add-brick $VOLUME_NAME replica $NODE_NUM $NODE1_IP:/var/lib/gvol_$DATESTAMP/brick
+	if [ "$?" ==  "0" ]; then
+		VOLUME_NAME=$(gluster volume info | grep '^Volume Name:' | awk '{print $3}')
+		NODE_NUM=$(gluster pool list | grep -v ^UUID | wc -l)
+		
+		gluster volume add-brick $VOLUME_NAME replica $NODE_NUM $NODE1_IP:/var/lib/gvol_$DATESTAMP/brick
+		
+		echo
+		echo
+		echo 'Now go run "./glu.sh mount" on '$NODE1_IP
+	fi
 fi
