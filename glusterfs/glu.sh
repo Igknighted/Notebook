@@ -9,9 +9,9 @@ else
 	exit 1
 fi
 
+# Detect the linux distro
 if [ -f /etc/redhat-release ]; then
 	DISTRO="rhel"
-	#echo Detected RHEL based distro.
 elif [ "$NAME" == "Ubuntu" ]; then
 	DISTRO="ubuntu"
 	echo Detected Ubuntu based distro.
