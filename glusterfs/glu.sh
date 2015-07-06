@@ -68,7 +68,6 @@ if [ "$1" == "install" ]; then
   mkfs.xfs -i size=512 /dev/vgglus_$DATESTAMP/gbrick_$DATESTAMP
   echo '/dev/vgglus_'$DATESTAMP'/gbrick_'$DATESTAMP' /var/lib/gvol_'$DATESTAMP' xfs inode64,nobarrier 0 0' >> /etc/fstab
   mkdir -p /var/lib/gvol_$DATESTAMP
-  echo "/dev/vgglus_"$DATESTAMP"/gbrick_"$DATESTAMP" /var/lib/gvol_"$DATESTAMP" xfs defaults 0 0"  >> /etc/fstab
   mount /var/lib/gvol_$DATESTAMP
   mkdir /var/lib/gvol_$DATESTAMP/brick
 fi
