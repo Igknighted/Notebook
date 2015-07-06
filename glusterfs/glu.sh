@@ -30,9 +30,9 @@ fi
 
 
 if [ "$1" == "" ]; then
-	echo 'This is glu.sh version 1'
+	echo 'glu.sh'
 	echo
-	echo 'Purpose: to setup glusterfs and add nodes'
+	echo 'GlusterFS deployment script.'
 	echo
 	echo 'Usage:'
 	echo
