@@ -69,7 +69,7 @@ fi
 
 
 if [ "$1" == "install" ]; then 
-	if [ ! -b $2 ]; then
+	if [ ! -b $2 ] || [ "$2" == "" ]; then
 		echo Block storage $2 not found.
 		exit
 	fi
