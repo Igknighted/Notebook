@@ -65,6 +65,9 @@ if [ "$1" == "auto" ]; then
 	read -p "What is the IP or hostname for NODE 2: " NODE2_IP
 	$0 connect $NODE1_IP $NODE2_IP
 	$0 mount
+	echo
+	echo
+	read -p 'Go run "./glu.sh mount" on the other server node now and you should be done.' NOVAR
 fi
 
 
@@ -158,4 +161,15 @@ if [ "$1" == "mount" ]; then
 	mkdir -p /mnt/gluster/gvol_$DATESTAMP
 	echo $NODE1_IP':/gvol_'$DATESTAMP'    /mnt/gluster/gvol_'$DATESTAMP'    glusterfs defaults 0 0' >> /etc/fstab
 	mount /mnt/gluster/gvol_$DATESTAMP
+	
+	echo
+	echo
+	echo Testing things out...
+	if [ -f /mnt/gluster/gvol_$DATESTAMP/testfile_$DATESTAMP ]; then
+		echo File /mnt/gluster/gvol_$DATESTAMP/testfile_$DATESTAMP exists, reading it:
+		cat /mnt/gluster/gvol_$DATESTAMP/testfile_$DATESTAMP
+	else
+		echo Creating test file /mnt/gluster/gvol_$DATESTAMP/testfile_$DATESTAMP so that during the mount on the other server, it will test reading it.
+		echo 'Hello World' > /mnt/gluster/gvol_$DATESTAMP/testfile_$DATESTAMP
+	fi
 fi
