@@ -93,7 +93,7 @@ fi
   
 
 if [ "$1" == "mount" ]; then
-  export NODE1_IP=$2
+  export NODE1_IP=$(gluster peer status | grep Hostname: | head -n1 | awk '{print $2}')
   mkdir -p /mnt/gluster/gvol_$DATESTAMP
   echo $NODE1_IP':/gvol_'$DATESTAMP'    /mnt/gluster/gvol_'$DATESTAMP'    glusterfs defaults 0 0' >> /etc/fstab
   mount /mnt/gluster/gvol_$DATESTAMP
