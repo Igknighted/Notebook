@@ -36,7 +36,7 @@ if [ "$1" == "install" ]; then
   BLOCK_STORAGE=$2
 
   if firewall-cmd --state; then
-    firewall-cmd --zone=public --add-source=192.168.0.0/16 --permanent
+    firewall-cmd --permanent --zone=public --add-rich-rule='rule family="ipv4" source address="192.168.0.0/16" accept'
     firewall-cmd --reload
   else
     iptables -I INPUT -s 192.168.0.0/16 -j ACCEPT
