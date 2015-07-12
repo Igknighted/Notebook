@@ -4,6 +4,9 @@ DATESTAMP=$(date +%Y%m%d)
 # BEGIN: Detect the OS information
 if [ -f /etc/os-release ]; then
 	. /etc/os-release
+elif grep -q 'release 6' /etc/redhat-release; then
+	DISTRO="rhel"
+	VERSION_ID="6"
 else
 	echo ERROR: File /etc/os-release does not exist.
 	exit 1
