@@ -44,7 +44,7 @@ if [ "$1" == "" ]; then
 	echo
 	echo
 	echo 'These are the manual steps for setting up first two nodes'
-	echo '     ./glu.sh install /dev/xvd[b-z]'
+	echo '     ./glu.sh install (/dev/xvd[b-z] | optional)'
 	echo '          This needs to be ran on both the servers to setup gluster services and bricks.'
 	echo '     ./glu.sh connect [Private IP of Node 1] [Private IP of Node 2]'
 	echo '          This only needs to be ran on only ONE of the servers to setup the gluster volume.'
@@ -53,7 +53,7 @@ if [ "$1" == "" ]; then
 	echo
 	echo
 	echo 'These are the steps for adding new nodes after the first two are setup.'
-	echo '     ./glu.sh install /dev/xvd[b-z]'
+	echo '     ./glu.sh install (/dev/xvd[b-z] | optional)'
 	echo '          This needs to be ran on all the servers to setup gluster services and bricks.'
 	echo '     ./glu.sh add [Private IP of another Node]'
 	echo '          Run this from an existing node after running "./glu.sh install" to add the new node.'
@@ -80,11 +80,24 @@ fi
 
 
 if [ "$1" == "install" ]; then 
-	if [ ! -b $2 ] || [ "$2" == "" ]; then
+	if [ ! -b $2 ] && [ "$2" != "" ]; then
 		echo Block storage $2 not found.
 		exit
 	fi
-	BLOCK_STORAGE=$2
+	
+	if [ "$2" != "" ]; then
+		BLOCK_STORAGE=$2
+	else
+		EMPTY_STORAGE_COUNT=$(parted -l 2>&1 | tr -d ':'  | grep -E '^Disk /|^Partition Table' | awk 'BEGIN{dev=""}{if($1 == "Disk"){dev=$2}else{if($3 == "unknown"){print dev}}}' | wc -l)
+		
+		if [ "$EMPTY_STORAGE_COUNT" != "1" ] && [ "$2" == "" ]; then
+		  echo There are $EMPTY_STORAGE_COUNT empty storage devices
+		  parted -l 2>&1 | tr -d ':'  | grep -E '^Disk /|^Partition Table' | awk 'BEGIN{dev=""}{if($1 == "Disk"){dev=$2}else{if($3 == "unknown"){print dev}}}'
+		  exit
+		fi
+		
+		BLOCK_STORAGE=$(parted -l 2>&1 | tr -d ':'  | grep -E '^Disk /|^Partition Table' | awk 'BEGIN{dev=""}{if($1 == "Disk"){dev=$2}else{if($3 == "unknown"){print dev}}}')
+	fi
 	
 	# allow in firewall...
 	if firewall-cmd --state; then
@@ -123,14 +136,14 @@ if [ "$1" == "install" ]; then
 	mkfs.xfs -i size=512 /dev/vgglus_$DATESTAMP/gbrick_$DATESTAMP
 	
 	echo Adding mount data to /etc/fstab
-	echo '/dev/vgglus_'$DATESTAMP'/gbrick_'$DATESTAMP' /var/lib/gvol_'$DATESTAMP' xfs inode64,nobarrier 0 0' >> /etc/fstab
+	echo '/dev/vgglus_'$DATESTAMP'/gbrick_'$DATESTAMP' /data/gluster/gvol_'$DATESTAMP' xfs inode64,nobarrier 0 0' >> /etc/fstab
 	
-	echo Creating mount point and mounting /var/lib/gvol_$DATESTAMP
-	mkdir -p /var/lib/gvol_$DATESTAMP
-	mount /var/lib/gvol_$DATESTAMP
+	echo Creating mount point and mounting /data/gluster/gvol_$DATESTAMP
+	mkdir -p /data/gluster/gvol_$DATESTAMP
+	mount /data/gluster/gvol_$DATESTAMP
 	
 	echo Creating brick dir...
-	mkdir /var/lib/gvol_$DATESTAMP/brick
+	mkdir /data/gluster/gvol_$DATESTAMP/brick
 	
 	echo; echo
 	echo Showing df output below.
@@ -158,7 +171,7 @@ if [ "$1" == "connect" ]; then
 	gluster peer probe $NODE2_IP
 	
 	
-	gluster volume create gvol_$DATESTAMP replica 2 transport tcp $NODE1_IP:/var/lib/gvol_$DATESTAMP/brick $NODE2_IP:/var/lib/gvol_$DATESTAMP/brick
+	gluster volume create gvol_$DATESTAMP replica 2 transport tcp $NODE1_IP:/data/gluster/gvol_$DATESTAMP/brick $NODE2_IP:/data/gluster/gvol_$DATESTAMP/brick
 	gluster volume set gvol_$DATESTAMP auth.allow 192.168.*.*
 	gluster volume set gvol_$DATESTAMP nfs.disable off
 	gluster volume set gvol_$DATESTAMP nfs.addr-namelookup off
@@ -201,7 +214,7 @@ if [ "$1" == "add" ]; then
 		VOLUME_NAME=$(gluster volume info | grep '^Volume Name:' | awk '{print $3}')
 		NODE_NUM=$(gluster pool list | grep -v ^UUID | wc -l)
 		
-		gluster volume add-brick $VOLUME_NAME replica $NODE_NUM $NODE1_IP:/var/lib/gvol_$DATESTAMP/brick
+		gluster volume add-brick $VOLUME_NAME replica $NODE_NUM $NODE1_IP:/data/gluster/gvol_$DATESTAMP/brick
 		
 		echo
 		echo
