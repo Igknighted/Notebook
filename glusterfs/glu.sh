@@ -64,7 +64,7 @@ if [ "$1" == "" ]; then
 fi
 
 if [ "$1" == "auto" ]; then 
-	read -p "Block storage location (For example, /dev/xvdb): " BLOCK_STORAGE
+	read -p "Block storage location (For example, /dev/xvdb | or leave empty for auto detection): " BLOCK_STORAGE
 	$0 install $BLOCK_STORAGE
 	echo
 	echo
