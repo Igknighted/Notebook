@@ -205,9 +205,9 @@ Modes (fuck...)
  > enable <--- gets me into priv mode (root)
  # priv mode (priv level 15) [set the clock in this mode]
  # configure terminal
- (config)# config mode
+ (config)# {this is config mode}
  (config)# line con 0 | line vty 0 4
- (config-line)#
+ (config-line)# {this is global config mode}
  (config)# interface f0/1
  (config-if)#
 
@@ -221,8 +221,80 @@ IOS BOOT GUIDE
  - running config stays in RAM, but must be saved before reboot
 
 
+Training with a Catalyst 2960 (192.168.108.6/24)
+
+To reset a switch:
+# del vlan.dat
+or hold the MODE button
+
+Automated Things on the Switch
+- DTP (dynamic trunking protocol)
+- Auto speed and duplex settings are negotiated
+- Auto MDIX (determines straight-through or crossover)
+
+Notes
+* I'll probably want DTP off
+* 
+
+
+In-band communication     - 
+Out-of-band communication - communication outside of bandwidht (such as serial/we use cyclades to access over serial)
 
 
 
+Logical Inteface
+----------------
+interface-vlan IS NOT VLAN, it is a SWITCHED VIRTUAL INTERFACE (IP daemon)
+vlans are grouped ports (layer 2 thing)
+
+To create:
+(config-line)# int vlan 100
+(config-line)# ip add 192.168.100.16 255.255.255.0
+^Z
+# show ip int brief
+# show vlan
+
+* Dumb switches can only have 1 active SVI at a time.
 
 
+
+WTF is this stuff?
+(config-line)# int vlan 1
+(config-line)# shut
+^Z
+# show run
+# show run | include hostname
+
+
+Assign a port to a VLAN
+> enable
+# conf term
+(config)# int f0/1
+(config-if)#switchport access vlan 100
+
+
+Move things to other vlans
+(config)#int range f0/23-24
+(config-if-range)#switchport access vlan 100
+
+# no shutdown <<-- IMPORTANT TO KNOW
+
+
+
+Ethernet frame structure
+--------------------------------
+Ether types
+0x0800 - ipv4
+0x86dd - ipv6
+
+
+Mac Addresses
+-------------
+Are 48 bits long (12 hex char)
+24 bits Orginizationally Unique Identifier (OUI) | 24 bits Vendor Assigned (unique portion)
+
+
+Maximum Transmition Unit (MTU) - the largest packet size
+--------------------------------------------------------
+ipv4 - 576
+ipv6 - 1280
