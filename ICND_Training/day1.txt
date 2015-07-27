@@ -119,7 +119,17 @@ THIS WILL BE ON THE TEST.
 |     Building a simple network              |
  --------------------------------------------
 
-Switches are a transparent bridge (does not modify frame as it passes through device)
+Switches are a transparent bridge (does not modify frame as it passes through device). They do 2 things:
+- Switches learn source MAC ADDRs (IMPORTANT: why will a switch never learn a BCAST ADDR)
+- They forward frames
+  * Directed - send it to a direct recipient
+  * Flood - copy out to every port except the one that sent it.
+   & these all have specific ranges except ANYCAST
+   # [B]CAST    - 1 to 1 transaction
+   # [U]NICAST  - 1 to all
+   # [M]CAST    - 1 to group transaction
+   -------------------------------------
+   # [A]NYCAST    - 1 to nearest (ghetto cast/first response)
 
 Routers strip off layer 2 headers and after making a routing decision, they choose 
 an outgoing port and build a layer 2 header before sending it out. They also block broadcast. They are the edge of the BROADCAST domain.
@@ -140,11 +150,50 @@ Signals will degrade over distance. To overcome this, a repeater will be used to
 listen to and repeat the signal. Hubs will probably be 'powered' so that it can
 repeat signals.
 
-Domain just means group.A COLLISION DOMAIN is a group of hosts connected to same wire. The BOUNDARY of the COLLISION DOMAIN is a switch. Every switch port represents a COLLISION DOMAIN.
+Domain just means group. A COLLISION DOMAIN is a group of hosts connected to same wire. The BOUNDARY of the COLLISION DOMAIN is a switch. Every switch port represents a COLLISION DOMAIN. If CSMA/CD is on it is 'half-duplex'. 
+
+Twisted pair? Straight through and crossover cables.
+   Full duplex
+    -------------------------
+   | Tx --- Data      --> Rx |
+   | Rx <-- Data      --- Tx | 
+   |-------------------------|
+   | Tx --- Collision --> CD |
+   | Rs <-- Collision ---    |
+    -------------------------
+
+
+A MULTILAYER SWITCH is really just a router, because it looks at layer 3 information. 
+
 
 OSI reference model?
 
 Ethertypes? 
+
+
+Broadcast Domains
+-----------------
+
+
+
+
+Legacy Stuff? 
+---------
+Bridges do in software what switches do in hardware. (example, virbr on xenserver/neutron is still shit).
+Bridgest would have 2 or 3 ports while switches would have many more. (Main difference is still just hardware vs software)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
