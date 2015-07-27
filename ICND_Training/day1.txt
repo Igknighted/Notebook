@@ -1,0 +1,151 @@
+Stuff to check out later:
+
+Cisco discovery protocol
+Linklayer? discovery protocol
+---------------------------------
+
+ --------------------------------------------
+|     Subnetting                             |
+|          Good times, with binary           |
+ --------------------------------------------
+
+
+  IP Address
+  ..........
+   32 bits
+Net   |   Host
+     Mask
+     Line
+
+
+Net: 8bits.8bits.8bits.8bits
+
+
+Net has - Classful Reservations (reserved IP addressing)
+
+Reserved Host Addresses
+ALL 1's = BCAST  (255.255.255.255)
+All 0's = NET ID (1.1.1.1)
+
+
+
+When dealing with IPs
+   convert IP to binary
+   draw maskline
+
+
+
+Valid Host IDs?
+---------------------
+Lazy chart
+128 64 32 16 8 4 2 1
+  0  0  0  0 0 0 0 0
+  0  0  0  0 0 0 0 0
+  0  0  0  0 0 0 0 0
+  0  0  0  0 0 0 0 0
+
+
+
+192.168.1.15/27
+...............
+128 64 32 16 8 4 2 1
+  1  1  0  0 0 0 0 0 = 192
+  1  0  1  0 1 0 0 0 = 168
+  0  0  0  0 0 0 0 1 = 1
+  0  0  0  0 1 1 1 1 = 15
+
+This is the net> 11000000.10101000.00000001.000|01111 <This is the host
+                              ^ /27 is 27 bits in
+All bits after the /27 are not just 0 or 1, so it is valid
+
+
+172.16.3.255/21 - valid
+...............
+128 64 32 16 8 4 2 1
+  1  0  1  0 1 1 0 0
+  0  0  0  1 0 0 0 0
+  0  0  0  0 0!0 1 1
+  1  1  1  1 1 1 1 1
+              ^ /21
+
+10.0.255.224/28 - not valid
+...............
+128 64 32 16 8 4 2 1
+  0  0  0  0 1 0 1 0
+  0  0  0  0 0 0 0 0
+  1  1  1  1 1 1 1 1
+  1  1  1  0|0 0 0 0
+            ^ /28
+Net ID = 224
+Bcast  = 239 because we flipped the bits after /28
+
+197.254.18.164/30 - not valid
+.................
+128 64 32 16 8 4 2 1
+  1  1  0  0 0 0 0 0
+  1  1  1  1 1 1 1 0
+  0  0  0  1 0 0 1 0
+  1  0  1  0 0 1!0 0
+                ^ /30
+
+221.261.241.250/30 - not valid
+
+17.255.0.0 - valid
+...............
+128 64 32 16 8 4 2 1
+  0  0  0  1 0 0 0 1
+! 1  1  1  1 1 1 1 1
+  0  0  0  0 0 0 0 0
+  0  0  0  0 0 0 0 0
+^ class A, so default is /8
+
+
+
+A bit about classes
+--------------------------------------------------
+Class    1st bin    1st dec     default netmask
+A      | 0....... |   1 - 126 | 255.0.0.0 (/8)
+B      | 10...... | 128 - 191 | 255.255.0.0 (/16)
+C      | 110..... | 192 - 223 | 255.255.255.0 (/24)
+--------------------------------------------------
+D      | 1110.... | 224 - 239 | MCAST range
+E      | 1111.... | 240 - 255 | Experimental
+
+THIS WILL BE ON THE TEST.
+
+
+
+ --------------------------------------------
+|     Building a simple network              |
+ --------------------------------------------
+
+Switches are a transparent bridge (does not modify frame as it passes through device)
+
+Routers strip off layer 2 headers and after making a routing decision, they choose 
+an outgoing port and build a layer 2 header before sending it out. They also block broadcast. They are the edge of the BROADCAST domain.
+
+Quality of services should be considered. Types are:
+- Batch applications (no human interaction)
+- Interactive Applications (human to machine transactions)
+- Real-time applications (Real-time Applications)
+
+
+Communications
+CSMA is used with colision detection, thus referred to as CSMA/CD. 
+
+A hub is a LAYER 1 networking device. So is a WIRE. LAYER 1 just refers to the 
+physical parts of the networking. 
+
+Signals will degrade over distance. To overcome this, a repeater will be used to
+listen to and repeat the signal. Hubs will probably be 'powered' so that it can
+repeat signals.
+
+Domain just means group.A COLLISION DOMAIN is a group of hosts connected to same wire. The BOUNDARY of the COLLISION DOMAIN is a switch. Every switch port represents a COLLISION DOMAIN.
+
+OSI reference model?
+
+Ethertypes? 
+
+
+
+
