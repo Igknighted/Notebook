@@ -189,8 +189,36 @@ Bridgest would have 2 or 3 ports while switches would have many more. (Main diff
 
 
 
+ --------------------------------------------
+|     (IOS) The COMMAND LINE                 |
+ --------------------------------------------
 
+Some good things to consider:
+- What mode am I in?
+- Is there a subcommand?
+  * it is kinda like dell open manage tools, but without dashes (-)
+  * must be in right mode for currect subcommands
 
+Modes (fuck...)
+ rommon> ROM monitor mode
+ > user mode (priv level 0 / low level access)
+ > enable <--- gets me into priv mode (root)
+ # priv mode (priv level 15) [set the clock in this mode]
+ # configure terminal
+ (config)# config mode
+ (config)# line con 0 | line vty 0 4
+ (config-line)#
+ (config)# interface f0/1
+ (config-if)#
+
+IOS BOOT GUIDE
+ - read only memory for POST
+  * rommon (rom monitor mode) if we don't get the OS
+ - IOS is in FLASH memory and gets loaded up (BAM! Not grub)
+ - IOS gets loaded into RAM
+ - Conf is stored in NVRAM (non volitile ram)
+ - Conf is loaded from NVRAM as startup-config into running-config
+ - running config stays in RAM, but must be saved before reboot
 
 
 
