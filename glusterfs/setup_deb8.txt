@@ -1,0 +1,74 @@
+DATESTAMP=$(date +%Y%m%d)
+BLOCK_STORAGE=/dev/xvdb
+
+ufw allow from 192.168.0.0/16
+apt-get install lvm2 xfsprogs python-software-properties software-properties-common -y
+add-apt-repository ppa:gluster/glusterfs-3.7 -y
+apt-get update
+apt-get install glusterfs-server -y
+apt-mark hold glusterfs*
+
+service glusterfs-server start
+update-rc.d glusterfs-server defaults
+
+
+
+# setup the brick
+echo Running parted...
+parted -s -- $BLOCK_STORAGE mktable gpt
+parted -s -- $BLOCK_STORAGE mkpart primary 2048s 100%
+parted -s -- $BLOCK_STORAGE set 1 lvm on
+partx -a $BLOCK_STORAGE
+
+echo Setting up logical volume and xfs file system...
+pvcreate $BLOCK_STORAGE'1'
+vgcreate vgglus_$DATESTAMP $BLOCK_STORAGE'1'
+lvcreate -l 100%VG -n gbrick_$DATESTAMP vgglus_$DATESTAMP
+mkfs.xfs -i size=512 /dev/vgglus_$DATESTAMP/gbrick_$DATESTAMP
+
+echo Adding mount data to /etc/fstab
+echo '/dev/vgglus_'$DATESTAMP'/gbrick_'$DATESTAMP' /data/gluster/gvol_'$DATESTAMP' xfs inode64,nobarrier 0 0' >> /etc/fstab
+
+echo Creating mount point and mounting /data/gluster/gvol_$DATESTAMP
+mkdir -p /data/gluster/gvol_$DATESTAMP
+mount /data/gluster/gvol_$DATESTAMP
+
+echo Creating brick dir...
+mkdir /data/gluster/gvol_$DATESTAMP/brick
+
+echo; echo
+echo Showing df output below.
+echo
+df -h
+
+
+########
+# Peering (run from 1 server)
+########
+
+NODE1_IP=192.168.3.1
+NODE2_IP=192.168.3.2
+
+gluster peer probe $NODE1_IP
+gluster peer probe $NODE2_IP
+
+
+gluster volume create gvol_$DATESTAMP replica 2 transport tcp $NODE1_IP:/data/gluster/gvol_$DATESTAMP/brick $NODE2_IP:/data/gluster/gvol_$DATESTAMP/brick
+gluster volume set gvol_$DATESTAMP auth.allow 192.168.*.*
+gluster volume set gvol_$DATESTAMP nfs.disable off
+gluster volume set gvol_$DATESTAMP nfs.addr-namelookup off
+gluster volume set gvol_$DATESTAMP nfs.export-volumes on
+gluster volume set gvol_$DATESTAMP nfs.rpc-auth-allow 192.168.*.*
+gluster volume start gvol_$DATESTAMP
+
+
+######
+# Mounting 
+######
+
+echo Mounting the gluster volume at /mnt/gluster/gvol_$DATESTAMP
+NODE1_IP=$(gluster peer status | grep Hostname: | head -n1 | awk '{print $2}')
+mkdir -p /mnt/gluster/gvol_$DATESTAMP
+echo $NODE1_IP':/gvol_'$DATESTAMP'    /mnt/gluster/gvol_'$DATESTAMP'    glusterfs defaults 0 0' >> /etc/fstab
+mount /mnt/gluster/gvol_$DATESTAMP
+	
