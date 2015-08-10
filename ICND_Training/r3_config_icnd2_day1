@@ -1,0 +1,164 @@
+
+!
+! Last configuration change at 03:36:56 CDT Mon Aug 10 2015
+! NVRAM config last updated at 03:46:40 CDT Mon Aug 10 2015 by racker
+! NVRAM config last updated at 03:46:40 CDT Mon Aug 10 2015 by racker
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname r3
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$TXc6$nFTUHkodRP8PPRDI..Q6d0
+enable password 7 045C0A140D204B4B
+!
+no aaa new-model
+clock summer-time CDT recurring
+!
+ip cef
+!
+!
+!
+ip dhcp excluded-address 192.3.10.0 192.3.10.9
+ip dhcp excluded-address 192.3.20.0 192.3.20.9
+ip dhcp excluded-address 192.3.10.11 192.3.10.255
+ip dhcp excluded-address 192.3.20.11 192.3.20.255
+!
+ip dhcp pool vlan200
+ network 192.3.20.0 255.255.255.0
+ default-router 192.3.20.1 
+!
+ip dhcp pool vlan100
+ network 192.3.10.0 255.255.255.0
+ default-router 192.3.10.1 
+!
+!
+!
+no ip domain lookup
+ip domain name r3.rackertraining.com
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+license udi pid CISCO1921/K9 sn FTX181582UP
+!
+!
+username racker privilege 15 password 7 021405435A545C
+!
+redundancy
+!
+!
+!
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ ip address 3.3.3.3 255.255.255.255
+!
+interface Embedded-Service-Engine0/0
+ no ip address
+ shutdown
+!
+interface GigabitEthernet0/0
+ description unused
+ no ip address
+ duplex full
+ speed 100
+!
+interface GigabitEthernet0/0.100
+ encapsulation dot1Q 100
+ ip address 192.3.10.1 255.255.255.0
+!
+interface GigabitEthernet0/0.200
+ encapsulation dot1Q 200
+ ip address 192.3.20.1 255.255.255.0
+!
+interface GigabitEthernet0/0.300
+ encapsulation dot1Q 300
+ ip address 192.3.30.1 255.255.255.0
+!
+interface GigabitEthernet0/0.666
+ encapsulation dot1Q 666
+!
+interface GigabitEthernet0/1
+ description to Core
+ ip address 172.16.1.3 255.255.255.0
+ duplex full
+ speed 100
+!
+interface Serial0/0/0
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+interface Serial0/0/1
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+router ospf 1337
+ router-id 3.3.3.3
+ network 3.3.3.3 0.0.0.0 area 0
+ network 172.16.1.0 0.0.0.255 area 0
+ network 192.3.10.0 0.0.0.255 area 0
+ network 192.3.20.0 0.0.0.255 area 0
+ network 192.3.30.0 0.0.0.255 area 0
+!
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+!
+!
+!
+!
+!
+control-plane
+!
+!
+banner motd i
+
+!
+line con 0
+ exec-timeout 27 0
+ logging synchronous
+ login local
+ history size 200
+line aux 0
+line 2
+ no activation-character
+ no exec
+ transport preferred none
+ transport output pad telnet rlogin lapb-ta mop udptn v120 ssh
+ stopbits 1
+line vty 0 4
+ exec-timeout 27 0
+ logging synchronous
+ login local
+ history size 200
+ transport input ssh
+line vty 5 15
+ exec-timeout 27 0
+ logging synchronous
+ login local
+ history size 200
+ transport input ssh
+!
+scheduler allocate 20000 1000
+!
+end
