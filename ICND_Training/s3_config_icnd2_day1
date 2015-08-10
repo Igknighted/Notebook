@@ -1,0 +1,264 @@
+
+!
+version 12.2
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname sw03
+!
+boot-start-marker
+boot-end-marker
+!
+enable secret 5 $1$egI2$zAnQodr3//4e7xeRreC8/.
+enable password 7 0115130750040009
+!
+username racker privilege 15 password 7 0101071C0A5955
+no aaa new-model
+clock timezone CST -6
+clock summer-time CST recurring
+system mtu routing 1500
+ip subnet-zero
+!
+no ip domain-lookup
+ip domain-name sw03.rackertraining.com
+!
+!
+!
+!
+!
+!
+!
+!
+!
+spanning-tree mode rapid-pvst
+spanning-tree portfast default
+spanning-tree portfast bpduguard default
+spanning-tree extend system-id
+!
+vlan internal allocation policy ascending
+!
+!
+!
+interface FastEthernet0/1
+ description 192.3.10.10
+ switchport access vlan 100
+ speed 100
+ duplex full
+ spanning-tree portfast
+!
+interface FastEthernet0/2
+ description 192.3.20.10
+ switchport access vlan 200
+ speed 100
+ duplex full
+ spanning-tree portfast
+!
+interface FastEthernet0/3
+ description unused
+ shutdown
+ speed 100
+ duplex full
+ spanning-tree portfast
+!
+interface FastEthernet0/4
+ description unused
+ shutdown
+ speed 100
+ duplex full
+ spanning-tree portfast
+!
+interface FastEthernet0/5
+ description unused
+ shutdown
+ speed 100
+ duplex full
+ spanning-tree portfast
+!
+interface FastEthernet0/6
+ description unused
+ shutdown
+ speed 100
+ duplex full
+ spanning-tree portfast
+!
+interface FastEthernet0/7
+ description unused
+ shutdown
+ speed 100
+ duplex full
+ spanning-tree portfast
+!
+interface FastEthernet0/8
+ description unused
+ shutdown
+ speed 100
+ duplex full
+ spanning-tree portfast
+!
+interface FastEthernet0/9
+ description unused
+ shutdown
+ speed 100
+ duplex full
+ spanning-tree portfast
+!
+interface FastEthernet0/10
+ description unused
+ shutdown
+ speed 100
+ duplex full
+ spanning-tree portfast
+!
+interface FastEthernet0/11
+ description unused
+ shutdown
+ speed 100
+ duplex full
+ spanning-tree portfast
+!
+interface FastEthernet0/12
+ description unused
+ shutdown
+ speed 100
+ duplex full
+ spanning-tree portfast
+!
+interface FastEthernet0/13
+ description unused
+ shutdown
+ speed 100
+ duplex full
+ spanning-tree portfast
+!
+interface FastEthernet0/14
+ description unused
+ shutdown
+ speed 100
+ duplex full
+ spanning-tree portfast
+!
+interface FastEthernet0/15
+ description unused
+ shutdown
+ speed 100
+ duplex full
+ spanning-tree portfast
+!
+interface FastEthernet0/16
+ description unused
+ shutdown
+ speed 100
+ duplex full
+ spanning-tree portfast
+!
+interface FastEthernet0/17
+ description unused
+ shutdown
+ speed 100
+ duplex full
+ spanning-tree portfast
+!
+interface FastEthernet0/18
+ description unused
+ shutdown
+ speed 100
+ duplex full
+ spanning-tree portfast
+!
+interface FastEthernet0/19
+ description unused
+ shutdown
+ speed 100
+ duplex full
+ spanning-tree portfast
+!
+interface FastEthernet0/20
+ description unused
+ shutdown
+ speed 100
+ duplex full
+ spanning-tree portfast
+!
+interface FastEthernet0/21
+ description unused
+ shutdown
+ speed 100
+ duplex full
+ spanning-tree portfast
+!
+interface FastEthernet0/22
+ description unused
+ shutdown
+ speed 100
+ duplex full
+ spanning-tree portfast
+!
+interface FastEthernet0/23
+ description unused
+ shutdown
+ speed 100
+ duplex full
+ spanning-tree portfast
+!
+interface FastEthernet0/24
+ description trunk to router
+ switchport trunk native vlan 666
+ switchport mode trunk
+ speed 100
+ duplex full
+ spanning-tree portfast
+!
+interface GigabitEthernet0/1
+ description unused
+ shutdown
+ media-type rj45
+ speed 1000
+ duplex full
+!
+interface GigabitEthernet0/2
+ description unused
+ shutdown
+ media-type rj45
+ speed 1000
+ duplex full
+!
+interface Vlan1
+ no ip address
+ no ip route-cache
+ shutdown
+!
+interface Vlan300
+ ip address 192.3.30.5 255.255.255.0
+ no ip route-cache
+!
+ip default-gateway 192.3.30.1
+no ip http server
+no ip http secure-server
+no cdp run
+!
+control-plane
+!
+banner motd 
+Wel
+!
+line con 0
+ exec-timeout 27 0
+ logging synchronous
+ login local
+ history size 200
+line vty 0 4
+ exec-timeout 27 0
+ logging synchronous
+ login local
+ history size 200
+ transport input ssh
+line vty 5 15
+ exec-timeout 27 0
+ logging synchronous
+ login local
+ history size 200
+ transport input ssh
+!
+end
