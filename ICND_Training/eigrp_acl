@@ -1,0 +1,81 @@
+conf t
+service password-encryption
+
+enable secret 5 $1$vMj0$DXxjM7iIq6aubOjxb2gLW1
+enable password 7 0831404F0017110F06
+
+
+no ip domain lookup
+hostname rtr6
+ip domain name somethingsomethingdarkside
+ipv6 unicast-routing
+
+username racker privilege 15 password 7 140513135D5679
+
+ip dhcp excluded-address 172.22.6.1 172.22.6.5
+ip dhcp excluded-address 172.22.6.7
+ip dhcp pool stuff
+ network 172.22.6.0 255.255.255.248
+ default-router 172.22.6.1
+
+interface Loopback2
+ ip address 6.6.6.6 255.255.255.255
+
+interface GigabitEthernet0/0
+ ip address 172.22.6.1 255.255.255.248
+ duplex full
+ speed 100
+ ipv6 address FC00:172:22:6::1/64
+ 
+interface GigabitEthernet0/1
+ ip address 100.100.100.6 255.255.255.240
+ duplex full
+ speed 100
+ ipv6 address 2000:100:100:100::6/64
+
+
+router eigrp 64999
+	network 172.22.6.1 
+
+
+line con 0
+ logging synchronous
+ login local
+ history size 200
+line aux 0
+line 2
+ no activation-character
+ no exec
+ transport preferred none
+ transport output pad telnet rlogin lapb-ta mop udptn v120 ssh
+ stopbits 1
+line vty 0 4
+ exec-timeout 27 0
+ logging synchronous
+ login local
+ history size 200
+ transport input ssh
+line vty 5 15
+ exec-timeout 27 0
+ logging synchronous
+ login local
+ history size 200
+ transport input ssh
+end
+ 
+
+object-group network DenyPeople
+	172.22.6.6 255.255.255.248
+ 
+ 
+ 
+ip access-list extended TheList
+ deny tcp object-group DenyPeople any eq 22 log 
+ permit ip any any
+ deny ip any any log
+
+access-class TheList in
+access-group TheList in
+ 
+
+ 
