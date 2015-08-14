@@ -14,7 +14,7 @@ int loop 0
  ip add 6.6.6.6 255.255.255.255
 
 interface s0/0/0
- ip add 209.165.201.130 255.255.255.224
+ ip add 209.165.201.130 255.255.255.0
  no shut
 
 interface Tunnel0
@@ -35,3 +35,5 @@ line vty 0 15
  transport input ssh
 
 end
+
+sh ip int brief tun 0
