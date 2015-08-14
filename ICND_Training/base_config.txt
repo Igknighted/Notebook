@@ -1,0 +1,20 @@
+conf t
+service password-encryption
+
+hostname rtr02
+username racker privilege 15 password rax123
+no ip domain-lookup
+ip domain-name rackspace.com
+
+line con 0
+ history size 200
+ exec-timeout 27 0
+ logging synchronous
+ login local
+line vty 0 15
+ exec-timeout 27 0
+ logging synchronous
+ login local
+ history size 200
+ transport input ssh
+end
