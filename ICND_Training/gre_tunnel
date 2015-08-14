@@ -14,13 +14,13 @@ int loop 0
  ip add 6.6.6.6 255.255.255.255
 
 interface s0/0/0
- ip add 209.165.202.130 255.255.255.224
+ ip add 209.165.201.130 255.255.255.224
  no shut
 
 interface Tunnel0
  tunnel mode gre ip
  ip address 192.168.2.2 255.255.255.0
- tunnel source 209.165.202.130
+ tunnel source 209.165.201.130
  tunnel destination 209.165.201.1
 
 line con 0
