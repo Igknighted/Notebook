@@ -9,6 +9,7 @@ hostname rtr6
 ip domain name somethingsomethingdarkside
 
 username racker privilege 15 password 7 140513135D5679
+crypto key generate rsa
 
 int loop 0
  ip add 6.6.6.6 255.255.255.255
