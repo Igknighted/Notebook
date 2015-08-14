@@ -1,0 +1,37 @@
+conf t
+service password-encryption
+
+enable secret 5 $1$vMj0$DXxjM7iIq6aubOjxb2gLW1
+enable password 7 0831404F0017110F06
+
+no ip domain lookup
+hostname rtr6
+ip domain name somethingsomethingdarkside
+
+username racker privilege 15 password 7 140513135D5679
+
+int loop 0
+ ip add 6.6.6.6 255.255.255.255
+
+interface s0/0/0
+ ip add 209.165.202.130 255.255.255.224
+ no shut
+
+interface Tunnel0
+ tunnel mode gre ip
+ ip address 192.168.2.2 255.255.255.0
+ tunnel source 209.165.202.130
+ tunnel destination 209.165.201.1
+
+line con 0
+ logging synchronous
+ login local
+ history size 200
+line vty 0 15
+ exec-timeout 27 0
+ logging synchronous
+ login local
+ history size 200
+ transport input ssh
+
+end
