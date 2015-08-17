@@ -1,20 +1,28 @@
 conf t
-service password-encryption
 
-hostname rtr02
-username racker privilege 15 password rax123
-no ip domain-lookup
-ip domain-name rackspace.com
+hostname rtr6
+
+service password-encryption
+enable secret 5 $1$vMj0$DXxjM7iIq6aubOjxb2gLW1
+enable password 7 0831404F0017110F06
+no ip domain lookup
+ip domain name somethingsomethingdarkside
+
+username racker privilege 15 password 7 140513135D5679
+crypto key generate rsa
+
+int loop 0
+ ip add 6.6.6.6 255.255.255.255
 
 line con 0
- history size 200
- exec-timeout 27 0
  logging synchronous
  login local
+ history size 200
 line vty 0 15
  exec-timeout 27 0
  logging synchronous
  login local
  history size 200
  transport input ssh
+
 end
