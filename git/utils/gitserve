@@ -1,0 +1,9 @@
+#!/bin/sh
+DIRECTORY=$(echo $SSH_ORIGINAL_COMMAND | awk '{print $NF}' | sed "s/'//g")
+USERNAME=$1
+if ! grep -q "$USERNAME $DIRECTORY" ~/git_repos; then
+	exit 1
+fi
+git-shell -c "$SSH_ORIGINAL_COMMAND"
+cd ~/"$DIRECTORY"
+git reset --hard
