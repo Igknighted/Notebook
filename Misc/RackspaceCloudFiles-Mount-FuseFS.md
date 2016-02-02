@@ -17,3 +17,6 @@ auth_url=https://auth.api.rackspacecloud.com/v1.0
 use_snet=true
 cache_timeout=600
 ```
+
+mkdir -p /mnt/cloudfiles
+cloudfuse /mnt/cloudfiles
