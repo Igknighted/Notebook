@@ -1,4 +1,4 @@
-This is just an example setup on two servers where the server names are glu1 and glu2. 
+This is just an example setup on two servers where the server names are data01 and data02. 
 
 Pre-setup Info on Setup
 ------------------------------------------------
