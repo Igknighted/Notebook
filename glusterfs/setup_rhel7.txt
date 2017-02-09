@@ -2,36 +2,37 @@ This is just an example setup on two servers where the server names are glu1 and
 
 Pre-setup Info on Setup
 ------------------------------------------------
-OS: RHEL 7 / CentOS 7
-glu1 IP: 10.176.12.77
-glu2 IP: 10.176.11.102
+OS: RHEL 7 / CentOS 7 / Rackspace Cloud
+data01 IP: 192.168.3.1
+data02 IP: 167.168.3.2
 xvdb is just a 100G block level storage device
 
 
 Commands to run for setup
 ------------------------------------------------
-both# cd /etc/yum.repos.d && wget http://download.gluster.org/pub/gluster/glusterfs/LATEST/RHEL/glusterfs-epel.repo
-both# yum install glusterfs{,-server,-fuse,-geo-replication}
-both# systemctl enable glusterd
-both# systemctl restart glusterd
-both# fdisk /dev/xvdb
-both# mkfs.xfs -i size=512 /dev/xvdb1
-both# mkdir -p /export/xvdb1 && mount /dev/xvdb1 /export/xvdb1 && mkdir -p /export/xvdb1/brick
-both# echo "/dev/xvdb1 /export/xvdb1 xfs defaults 0 0"  >> /etc/fstab
+[both]# yum install wget -y
+[both]# yum install centos-release-gluster -y
+[both]# yum install epel-release -y
+[both]# yum install glusterfs-server -y
 
-glu1# gluster peer probe 10.176.11.102
+[both]# systemctl enable glusterd
+[both]# systemctl restart glusterd
 
-glu2# gluster peer probe 10.176.11.102
+[both]# firewall-cmd --zone=public --add-rich-rule='rule family="ipv4" source address="192.168.3.0/24" accept'
+[both]# firewall-cmd --reload
+[both]# firewall-cmd --zone=public --list-all
 
-glu2# gluster volume create testvol rep 2 transport tcp 10.176.12.77:/export/xvdb1/brick 10.176.11.102:/export/xvdb1/brick
-glu2# gluster volume start testvol
-glu2# echo '10.176.11.102:/testvol    /mnt/gluster    glusterfs defaults 0 0' >> /etc/fstab
-glu2# mkdir /mnt/gluster; mount /mnt/gluster
-glu2# echo Hello World > /mnt/gluster/testing_glu1
+[data01]# gluster peer probe 192.168.3.2
+[data02]# gluster peer probe 192.168.3.1
 
-glu1# echo '10.176.12.77:/testvol    /mnt/gluster    glusterfs defaults 0 0' >> /etc/fstab
-glu1# mkdir /mnt/gluster; mount /mnt/gluster
-glu1# cat /mnt/gluster/testing_glu1
-glu1# echo It works > /mnt/gluster/testing_glu1
+[data02]# gluster volume create GFSvol rep 2 transport tcp 192.168.3.1:/export/xvdb1/brick 192.168.3.2:/export/xvdb1/brick
+[data02]# gluster volume start GFSvol
 
-glu2# cat /mnt/gluster/testing_glu1
+
+Any clients:
+[note]# allow the client server
+[any gluster node]# gluster volume set GFSvol auth.allow 192.168.3.*
+
+[client]# yum install glusterfs-client -y
+[client]# mount -t glusterfs 192.168.3.1:/GFSvol /mnt
+[client]# grep GFSvol /etc/mtab >> /etc/fstab
