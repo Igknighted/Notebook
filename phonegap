@@ -1,0 +1,48 @@
+Environment: Ubuntu
+
+Setup:
+
+
+# using nvm for better nodejs
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.2/install.sh | bash
+
+# Neccessary environmetn settings (may want to put into .bashrc)
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm
+
+# actually install nodejs
+nvm install v6.10.3
+
+# need android tools and phonegap
+apt-get install default-jdk android-platform-tools-base gradle adb fastboot
+npm install -g phonegap
+
+
+# Downloaded sdk-tools-linux-3859397.zip from https://developer.android.com/studio/index.html
+cd ~/Downloads
+unzip sdk-tools-linux-3859397.zip
+mv tools ~/android-tools
+cd ~/android-tools
+
+# see https://developer.android.com/studio/command-line/sdkmanager.html
+# Pretty much installed everything in ~/android-tools/sdk
+export ANDROID_HOME=~/android-tools/sdk
+mkdir $ANDROID_HOME
+./bin/sdkmanager --sdk_root=$ANDROID_HOME "PACKAGE NAME HERE"
+
+# ugh... android broke cordova... 
+cordova platform update android@6.2.2
+
+#in project
+cordova platform rm android
+cordova platform add android@6.2.2
+
+
+
+phonegap create hellogap
+cd hellogap
+phonegap prepare android
+phonegap compile android
+
+
+find . | grep apk$
