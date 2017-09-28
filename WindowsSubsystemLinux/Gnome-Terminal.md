@@ -28,7 +28,12 @@ Install gnome-terminal in ubuntu
 
 Create a shortcut to open Gnome Terminal...
 ```
-# powershell -windowstyle hidden -Command "iex \"bash ~ -l -c 'DISPLAY=:0 gnome-terminal'\" "
+# powershell -windowstyle hidden -Command "iex \"bash ~ -l -c 'DISPLAY=:0.0 gnome-terminal'\" "
+```
+
+Or make `Gnome Terminal.vbs`
+```
+WScript.CreateObject("WScript.Shell").run "bash ~ -l -c 'DISPLAY=:0.0 gnome-terminal' ", 0
 ```
 
 Additional stuff... because I hated the defaults...
