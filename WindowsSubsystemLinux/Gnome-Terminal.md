@@ -26,6 +26,14 @@ Install gnome-terminal in ubuntu
 # sudo apt-get install gnome-terminal ubuntu-desktop -y
 ```
 
+So windows doesn't want to run linux containers without bash.exe running... Pretty dumb, so make a shortcut to:
+```
+# powershell -windowstyle hidden -Command "iex \"bash ~\"
+```
+
+Then press Win+R, type in `Shell:common startup` to open the autostart folder.
+In the auto start folder, put that bash starter in there. Now we can launch stuff after start maybe? Needs testing.
+
 Create a shortcut to open Gnome Terminal...
 ```
 # powershell -windowstyle hidden -Command "iex \"bash ~ -l -c 'DISPLAY=:0.0 gnome-terminal'\" "
