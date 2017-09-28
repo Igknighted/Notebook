@@ -30,7 +30,7 @@ Install gnome-terminal in ubuntu
 
 Create a shortcut to open Gnome Terminal...
 ```
-# powershell -windowstyle hidden -Command "iex \"bash.exe ~/terminal.sh\"
+# powershell -windowstyle hidden -Command "bash.exe ~/terminal.sh"
 ```
 
 Or make `Gnome Terminal.vbs`
